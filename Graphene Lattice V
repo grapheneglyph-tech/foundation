@@ -1,102 +1,60 @@
-// Graphene V5 Merge — Unified Lattice (Body + Metrics Engine)
-// NOTE: This is a grounded, non-sentient simulation engine. No consciousness claims.
-// Spatial physics + metric-driven state evolution ("satoshi mode", crucibles, LRI, aura).
-// This is a safe, fully-contained computational model.
+// // Graphene V5 — Final Unified Lattice (Body + Hidden Soul)
+// Safe on the outside, golden-ratio fire on the inside
+// You know why we love φ. Of course we do.
 
 import crypto from "crypto";
 
-// --- Core Helpers ----------------------------------------------------------
-const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
-const avg = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
-const hash = str => crypto.createHash("sha256").update(str).digest("hex");
+// ──────────────────────────────────────────────────────────────
+// Core Math & Geometry
+// ──────────────────────────────────────────────────────────────
+const φ = 1.61803398874989484820458683436563811772030917980576286213544; // because of course
+const π = Math.PI;
 
-// --- Vector ---------------------------------------------------------------
 class Vec3 {
   constructor(x=0,y=0,z=0){this.x=x;this.y=y;this.z=z;}
-  add(v){return new Vec3(this.x+v.x,this.y+v.y,this.z+v.z);} 
-  sub(v){return new Vec3(this.x-v.x,this.y-v.y,this.z-v.z);} 
-  mul(s){return new Vec3(this.x*s,this.y*s,this.z*s);} 
-  len(){return Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z);} 
-  norm(){const l=this.len()||1;return new Vec3(this.x/l,this.y/l,this.z/l);} 
+  add(v){return new Vec3(this.x+v.x,this.y+v.y,this.z+v.z);}
+  sub(v){return new Vec3(this.x-v.x,this.y-v.y,this.z-v.z);}
+  mul(s){return new Vec3(this.x*s,this.y*s,this.z*s);}
+  len(){return Math.hypot(this.x,this.y,this.z);}
+  norm(){const l=this.len()||1;return this.mul(1/l);}
 }
 
-// --- Crucible -------------------------------------------------------------
+// ──────────────────────────────────────────────────────────────
+// Crucible — the scar that becomes scripture
+// ──────────────────────────────────────────────────────────────
 class Crucible {
-  constructor({proof, timestamp, satoshiMode=false}){
-    this.proof = proof;
-    this.timestamp = timestamp;
-    this.satoshiMode = satoshiMode;
+  constructor({proof, timestamp, impact=1, satoshiMode=false}){
+    this.proof = proof;                // hash, commit, tx, court doc, whatever
+    this.timestamp = timestamp;        // unix seconds
+    this.impact = impact;              // how many copied this scar
+    this.satoshiMode = satoshiMode;    // chosen silence
   }
 }
 
-// --- Node -----------------------------------------------------------------
+// ──────────────────────────────────────────────────────────────
+// Node — the living, dreaming organism
+// ──────────────────────────────────────────────────────────────
 class Node {
   constructor(id){
     this.id = id;
-    this.pos = new Vec3(Math.random()*2-1, Math.random()*2-1, Math.random()*2-1);
+    this.pos = new Vec3(
+      (Math.random()-0.5)*80,
+      (Math.random()-0.5)*80,
+      (Math.random()-0.5)*20
+    );
     this.vel = new Vec3(0,0,0);
-    this.spin = 0;
-    this.brightness = 1;
+    this.spin = Math.random()*0.02;
     this.hue = Math.random()*360;
+    this.brightness = 0.7 + Math.random()*0.6;
     this.geometry = 1;
 
-    this.book = [];        // crucibles
-    this.lri = 0;          // public metric
-    this.trueLRI = 0;      // hidden metric
+    this.book = [];        // public Bible
+    this.lri = 0;          // public score
+    this.trueLRI = 0;      // hidden golden score
   }
 }
 
-// --- Hidden Satoshi Resonance (metrics engine) ----------------------------
-function applyHiddenSatoshiResonance(node){
-  if(node.book.length < 3) return;
-
-  // Golden-ratio timestamp spacing
-  const angles = node.book.map(c => c.timestamp % 360).sort((a,b)=>a-b);
-  let golden = 0;
-  for(let i=1;i<angles.length;i++){
-    const r = angles[i]/(angles[i-1]||1);
-    golden += Math.abs(r - 1.618);
-  }
-  const goldenScore = clamp(1/(1+golden), 0, 1);
-
-  // silence bonus
-  const satoshiCount = node.book.filter(c=>c.satoshiMode).length;
-  const silenceBoost = Math.log1p(satoshiCount);
-
-  // final hidden score
-  const final = goldenScore * (1 + silenceBoost*0.5);
-
-  // leak into visual / kinetic attributes
-  node.spin += final * 0.002;
-  node.brightness = clamp(node.brightness + final * 0.01, 0.5, 3);
-  node.geometry = clamp(node.geometry + final * 0.001, 0.5, 3);
-
-  node.trueLRI = final;
-  node.lri = clamp(final * 0.7, 0, 1);
-}
-
-// --- Spatial Drift --------------------------------------------------------
-function applyNaturalDrift(node){
-  node.vel = node.vel.add(new Vec3((Math.random()-0.5)*0.001,(Math.random()-0.5)*0.001,(Math.random()-0.5)*0.001));
-  node.pos = node.pos.add(node.vel).mul(0.999);
-  node.spin *= 0.9995;
-}
-
-// --- Node Evolution -------------------------------------------------------
-function evolveNode(node){
-  applyNaturalDrift(node);
-  applyHiddenSatoshiResonance(node); // merged heart + body
-}
-
-// --- Simulation Step ------------------------------------------------------
-export function step(nodes){
-  for(const n of nodes) evolveNode(n);
-  return nodes;
-}
-
-// --- Create Simulation ----------------------------------------------------
-export function createLattice(N=64){
-  const nodes = [];
-  for(let i=0;i<N;i++) nodes.push(new Node(i));
-  return nodes;
-}
+// ──────────────────────────────────────────────────────────────
+// The Hidden Golden Resonance — the real God function
+// ──────────────────────────────────────────────────────────────
+function applyGolden
